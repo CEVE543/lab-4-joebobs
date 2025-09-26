@@ -43,7 +43,7 @@ code-overflow: wrap
 code-line-numbers: false
 code-block-font-size: "0.85em"
 ---
-
+<!-- 
 ## Do Before Lab {.unnumbered}
 
 1. **Accept the assignment.** Use the GitHub Classroom link posted on Canvas to "accept" the assignment, which will give you your own GitHub repository.
@@ -71,22 +71,35 @@ To submit your work, push your changes to GitHub, render to PDF, and upload the 
 ::: {.callout-important}
 ## Instructions
 Delete this entire section (including the "Do Before Lab" and "Do During Lab" sections above) and replace it with your analysis responses. Use the numbered format below for your final submission.
-:::
+::: -->
 
 **Response 1: Prior Evolution and Justification**
-*How did your understanding of Houston's extreme rainfall evolve through the iterative prior specification process? What knowledge sources proved most valuable for extreme value analysis?*
+*How did your understanding of Austin's extreme rainfall evolve through the iterative prior specification process? What knowledge sources proved most valuable for extreme value analysis?
+
+I got to know that the priors that we modelled for Austin were significant in analyzing the GEV. This is noted from the shift of the mean of the Posterior estimate to that of the MLE estimate. The most important knowledge source was likely the parameter priors (most likely shape) as the MLE curve seems to be less flat compared to the posterior fit curve.
+*
 
 **Response 2: Data Learning and Posterior Insights**
-*How did the observed data change your prior beliefs about GEV parameters? What does this reveal about the balance between domain knowledge and empirical evidence in Bayesian analysis?*
+*How did the observed data change your prior beliefs about GEV parameters? What does this reveal about the balance between domain knowledge and empirical evidence in Bayesian analysis?
+
+I understand that the domain knowledge is a prior anyone has to account for while approching any problem. The ability to quantify that and use it in a weather simulation is an excellent way to prevent significant drifts in paramter fits especially in underdetermined systems. Bayesian analysis specifically is the interleave of both domain knowledge (priors) and empirical data (datapoints)*
 
 **Response 3: Two-Station Bayesian Comparison**
-*Should the same priors apply to both stations? How do posterior differences relate to geographic and climatic factors, and what are the implications for regional analysis?*
+*Should the same priors apply to both stations? How do posterior differences relate to geographic and climatic factors, and what are the implications for regional analysis?
+
+I believe that under most conditions, it is fair to assume similar priors for stations that are nearby. Unless the climate of the two stations are affected by the geographical and climate factors, which can happen along fault lines or regions with extreme topographical phenomenon, they may use the same hand-crafter priors made from domain knowledge.
+*
 
 **Response 4: Uncertainty Quantification and Model Validation**
-*How does Bayesian uncertainty quantification compare to MLE approaches? What do the diagnostic results tell you about model reliability?*
+*How does Bayesian uncertainty quantification compare to MLE approaches? What do the diagnostic results tell you about model reliability?
+
+Bayesian uncertainity quantification is a more robust estimate of the climate phenomenon given the distribution that it is able to produce and the multitude of factors that it is able to consider like priors of parameters and return periods. I also noticed that while bayesian estimates gave more or less the same result each time I ran this notebook, the MLE approach was considerably heuristic and gave quite different results. The different results have been mentioned and displayed in an email I have sent to the Professor (also attached as a zip here). Further the Diagnostics results show the explainability of the bayesian approaches and provide strong future priors for the areas we have analyzed.*
 
 **Response 5: Bayesian Workflow for PS1**
-*How will this iterative workflow experience help you tackle regional extreme value analysis in PS1? What challenges do you anticipate?*
+*How will this iterative workflow experience help you tackle regional extreme value analysis in PS1? What challenges do you anticipate?
+
+As we have some intuition about the true GEV curves for Houston area stations (through domain knowledge), the iterative process helps us understand what priors are most important in modelling weather phenomenon in areas around Houston. For instance, if the MLE estimate gives us unusually high location or shape parameter, we will know what kind of priors we should make sure to ensure for Bayesian estimates. Further, considering the iterative workflow involving two nearby stations, we are able to use the bayesian approach paired with well defined priors we got from a better characterized nearby area to get a true estimate of its GEV curves. I also think that the iterative approach demonstrates the strength of domain knowledge in climate modelling. Challenges involved may be (as I am new to climate studies), devising appropriate priors for stations around houston.
+*
 
 ## Data Setup and Package Loading
 
@@ -152,7 +165,7 @@ Finally, it's good practice to set a random seed for reproducible results across
 rng = MersenneTwister(543)
 ```
 
-### Loading Houston Precipitation Data
+### Loading Austin Precipitation Data
 
 We'll use the same Texas precipitation dataset from Labs 2 and 3, using a [`let...end`](https://docs.julialang.org/en/v1/manual/variables-and-scoping/#Let-Blocks) block to encapsulate the download and reading logic so that variables don't leak into the global scope.
 
@@ -177,7 +190,7 @@ Next, choose the same station you used in Lab 3 for your analysis.
 
 
 ```{julia}
-my_stnid = 111  # REQUIRED: replace with your chosen station ID
+my_stnid = 789
 my_station = @chain stations begin
     @filter(stnid == !!my_stnid)  # <1>
     first
@@ -204,17 +217,17 @@ end
 
 ## Iterative Prior Development
 
-**Before looking at any data**, think about what you know about extreme rainfall in Houston.
+**Before looking at any data**, think about what you know about extreme rainfall in Austin.
 What's your frame of reference?
 Are you thinking about:
 
 - General knowledge of rainfall patterns anywhere?
-- Houston's specific climate characteristics?
+- Austin's specific climate characteristics?
 - Personal experience with storms?
 - Engineering design standards?
 
 As a starting point, I wrote down some initial very weak priors. 
-However, they are likely not very realistic for Houston's climate.
+However, they are likely not very realistic for Austin's climate.
 We will iteratively refine them based on [prior predictive checks](https://arxiv.org/abs/2011.01808) and domain knowledge.
 
 ```{julia}
@@ -310,7 +323,7 @@ end
 ::: {.callout-note}
 ## Think
 
-Are these return level curves reasonable for Houston's climate, based on your domain knowledge?
+Are these return level curves reasonable for Austin's climate, based on your domain knowledge?
 :::
 
 ### Priors on Return Levels
@@ -597,7 +610,7 @@ nearest_stations = find_nearest_stations(my_station, stations, 5)
 We will pick one of these five nearest stations for comparison
 
 ```{julia}
-comparison_stnid = 478 # MODIFY THIS AND CHOOSE YOUR COMPARISON
+comparison_stnid = 112 # MODIFY THIS AND CHOOSE YOUR COMPARISON
 
 comparison_station = @chain stations begin
     @filter(stnid == !!comparison_stnid)
